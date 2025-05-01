@@ -93,7 +93,7 @@ public class LoginFormTest {
 
     @Test
     public void testCorrectUsernameCorrectPasswordInvalidCodeWrong() {
-    	System.out.println("Test-->: testCorrectUsernameCorrectPasswordValidCode");
+    	System.out.println("	: testCorrectUsernameCorrectPasswordValidCode");
         LoginStatus status = LoginForm.login("ahsan", "ahsan_pass");
         Assert.assertTrue(status.isLoginSuccess());
         Assert.assertFalse(LoginForm.validateCode("654321"));
