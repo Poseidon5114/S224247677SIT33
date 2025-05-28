@@ -26,7 +26,7 @@ public class UnitTests {
 
         WebDriver driver = new ChromeDriver();
 
-        // Replace with your full local file path to login.html
+        // Path to local login.html
         driver.navigate().to("file:///C:/Users/olympian/Desktop/sit33/S224247677SIT33/pages/login.html");
 
         sleep(2);
@@ -51,39 +51,48 @@ public class UnitTests {
         driver.close();
     }
 
-    @Test public void testValidLogin() {
-        performLoginTest("Hitesh", "Goodgod@11", "success");
+    @Test
+    public void testLoginSuccessForValidUser() {
+        performLoginTest("Samarth", "passwd12", "success");
     }
 
-    @Test public void testInvalidPassword() {
-        performLoginTest("Hitesh", "fnafaw", "fail");
+    @Test
+    public void testLoginFailWithWrongPassword() {
+        performLoginTest("Samarth", "wrongpass", "fail");
     }
 
-    @Test public void testInvalidUsername() {
-        performLoginTest("fawkfba", "Goodgod@11", "fail");
+    @Test
+    public void testLoginFailWithUnknownUser() {
+        performLoginTest("UnknownUser", "passwd12", "fail");
     }
 
-    @Test public void testInvalidCredentials() {
+    @Test
+    public void testLoginFailForWrongUserAndPass() {
         performLoginTest("user", "pass", "fail");
     }
 
-    @Test public void testEmptyUsername() {
-        performLoginTest("", "Goodgod@11", "fail");
+    @Test
+    public void testLoginFailWithBlankUsername() {
+        performLoginTest("", "passwd12", "fail");
     }
 
-    @Test public void testEmptyPassword() {
-        performLoginTest("Hitesh", "", "fail");
+    @Test
+    public void testLoginFailWithEmptyPasswordField() {
+        performLoginTest("Samarth", "", "fail");
     }
 
-    @Test public void testEmptyUsernameAndPassword() {
+    @Test
+    public void testLoginFailWhenBothFieldsEmpty() {
         performLoginTest("", "", "fail");
     }
 
-    @Test public void testCaseSensitivity() {
-        performLoginTest("hitesh", "goodgod@11", "fail");
+    @Test
+    public void testLoginFailsDueToCaseSensitivity() {
+        performLoginTest("samarth", "passwd12", "fail"); // lowercase
     }
 
-    @Test public void testSQLInjectionAttempt() {
-        performLoginTest("Hitesh' OR '1'='1", "Goodgod@11", "fail");
+    @Test
+    public void testLoginBlockedForSQLInjectionLikeInput() {
+        performLoginTest("Samarth' OR '1'='1", "passwd12", "fail");
     }
 }
