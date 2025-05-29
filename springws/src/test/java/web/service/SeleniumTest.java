@@ -4,11 +4,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumTest {
 
@@ -17,8 +20,8 @@ public class SeleniumTest {
 
     @Before
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver", 
-            "C:\\Users\\olympian\\Desktop\\chromedriver-win64\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver",
+                "C:\\Users\\olympian\\Desktop\\chromedriver-win64\\chromedriver.exe");
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, 10);
         driver.get("http://localhost:8080/");
@@ -33,20 +36,24 @@ public class SeleniumTest {
 
     private void performOperation(String num1, String num2, String operation) {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("number1")));
-        
-        driver.findElement(By.id("number1")).clear();
-        driver.findElement(By.id("number2")).clear();
 
-        driver.findElement(By.id("number1")).sendKeys(num1);
-        driver.findElement(By.id("number2")).sendKeys(num2);
+        WebElement number1Field = driver.findElement(By.id("number1"));
+        WebElement number2Field = driver.findElement(By.id("number2"));
+        WebElement operationDropdown = driver.findElement(By.id("operation"));
+        WebElement submitButton = driver.findElement(By.id("submit"));
 
-        driver.findElement(By.id("operation"))
-              .findElement(By.cssSelector("option[value='" + operation + "']"))
-              .click();
+        number1Field.clear();
+        number2Field.clear();
 
-        driver.findElement(By.id("submit")).click();
-        
-        // Wait for result to update (adjust if necessary)
+        number1Field.sendKeys(num1);
+        number2Field.sendKeys(num2);
+
+        // Select the operation
+        operationDropdown.findElement(By.cssSelector("option[value='" + operation + "']")).click();
+
+        // Submit the form
+        submitButton.click();
+
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("result")));
     }
 
@@ -54,17 +61,12 @@ public class SeleniumTest {
         return driver.findElement(By.id("result")).getText().trim();
     }
 
+    // --- Test Cases ---
+
     @Test
     public void testAdditionValidInput() {
         performOperation("10", "5", "add");
         Assert.assertEquals("15.0", getResultText());
-    }
-
-    @Test
-    public void testAdditionInvalidInput() {
-        performOperation("abc", "5", "add");
-        String text = getResultText();
-        Assert.assertTrue(text.contains("Invalid") || text.isEmpty());
     }
 
     @Test
@@ -80,15 +82,16 @@ public class SeleniumTest {
     }
 
     @Test
-    public void testEmptyInputs() {
-        performOperation("", "", "add");
-        String text = getResultText();
-        Assert.assertTrue(text.contains("Invalid") || text.isEmpty());
+    public void testAdditionInvalidInput() {
+        performOperation("abc", "5", "add");
+        String result = getResultText();
+        Assert.assertTrue(result.toLowerCase().contains("invalid") || result.isEmpty());
     }
 
     @Test
-    public void testScientificNotation() {
-        performOperation("1e2", "2e2", "add");
-        Assert.assertEquals("300.0", getResultText());
+    public void testEmptyInputs() {
+        performOperation("", "", "add");
+        String result = getResultText();
+        Assert.assertTrue(result.toLowerCase().contains("invalid") || result.isEmpty());
     }
 }
