@@ -4,6 +4,8 @@
 <h2>HTML Forms</h2>
 
 <div>${message}</div><br/><br/>
+<div style="color:red; font-weight:bold;">${message}</div>
+
 
 <form action="/login" method="post">
   <label for="username">User name:</label><br>

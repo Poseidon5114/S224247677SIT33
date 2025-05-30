@@ -4,6 +4,7 @@
 <h2>Q1</h2>
 
 <div>${message}</div><br/><br/>
+<div style="color:red; font-weight:bold;">${message}</div>
 
 <form action="/q1" method="post">
   <label for="number1">First number:</label><br>
